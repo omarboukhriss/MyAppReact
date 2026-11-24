@@ -1,0 +1,32 @@
+import express from 'express';
+import cors from 'cors';
+import dotenv from 'dotenv';
+import mongoose from 'mongoose';
+
+dotenv.config();  // Charge les variables d'environnement à partir d'un fichier .env
+
+const app = express();
+
+// Connexion à MongoDB via la variable d'environnement MONGO_URI
+const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/mern';
+mongoose
+  .connect(MONGO_URI)
+  .then(() => console.log('MongoDB connected'))
+  .catch((err) => console.error('MongoDB connection error:', err.message));
+
+// Middleware pour autoriser les requêtes cross-origin
+app.use(cors());
+
+// Middleware pour parser les requêtes JSON
+app.use(express.json());
+
+// Exemple de route API
+app.get('/api/health', (req, res) => {
+  res.json({ message: 'API is running' });
+});
+
+// Démarrer le serveur sur le port 9000
+const PORT = process.env.PORT || 9000;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
